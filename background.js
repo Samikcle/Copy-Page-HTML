@@ -23,7 +23,16 @@ chrome.action.onClicked.addListener(async (tab) => {
 
 function copyCurrentPageHTML() {
   // Capture the html, including changes made after page load.
-  const html = document.documentElement.outerHTML;
+  const captureDoctype = false; // set to true if you want to include the doctype in the copied HTML
+  let html;
+  if(captureDoctype) {
+    const doctype = document.doctype
+      ? new XMLSerializer().serializeToString(document.doctype) + '\n'
+      : '';
+    html = doctype + document.documentElement.outerHTML;
+  } else {
+    html = document.documentElement.outerHTML;
+  }
 
   // The clipboardWrite extension permission permits this fallback on pages
   // where navigator.clipboard.writeText needs a user activation.

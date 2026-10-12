@@ -18,6 +18,7 @@ Open `chrome://extensions/shortcuts` (adjust the browser prefix for Edge or Brav
 ## Notes and limitations
 
 - Copies the current **live DOM HTML**.
+- To also copy `<!DOCTYPE>` declaration, the setting 'const captureDoctype' can be adjusted to be 'true' in **background.js**.
 - Does **not** include the contents of external JavaScript or CSS files, iframe documents, shadow roots, or the original HTTP response source.
 - Browser internal pages, the Chrome Web Store, and certain protected tabs do not allow script injection. The extension displays an **ERR** badge if the operation fails.
 - The HTML is copied locally to your clipboard; the extension does not upload it.
