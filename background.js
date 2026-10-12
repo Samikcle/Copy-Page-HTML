@@ -1,13 +1,30 @@
-chrome.action.onClicked.addListener(async (tab) => {
-  if (!tab.id) return;
+// Shared handler
+async function handleCopyHTML(tabId, returnHtml = false) {
+  const { captureDoctype = true } =
+    await chrome.storage.local.get('captureDoctype');
+
+  const results = await chrome.scripting.executeScript({
+    target: { tabId: tabId },
+    func: copyCurrentPageHTML,
+    args: [captureDoctype, returnHtml]
+  });
+
+  return results[0]?.result;
+}
+
+// Keyboard shortcut
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command !== 'copy-page-html') return;
+
+  const [tab] = await chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  });
+
+  if (!tab?.id) return;
 
   try {
-    const results = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: copyCurrentPageHTML
-    });
-
-    const copied = results[0]?.result === true;
+    const copied = await handleCopyHTML(tab.id);
     await chrome.action.setBadgeText({ tabId: tab.id, text: copied ? 'OK' : 'ERR' });
     await chrome.action.setBadgeBackgroundColor({
       tabId: tab.id,
@@ -21,17 +38,38 @@ chrome.action.onClicked.addListener(async (tab) => {
   }
 });
 
-function copyCurrentPageHTML() {
+// Receive requests from popup.js 
+chrome.runtime.onMessage.addListener(
+  (message, sender, sendResponse) => {
+    if (message.type !== 'GET_HTML') return;
+
+    handleCopyHTML(message.tabId, true)
+      .then((html) => {
+        sendResponse({ html: html });
+      })
+      .catch((error) => {
+        console.error('Cannot retrieve HTML:', error);
+        sendResponse({ error: error.message });
+      });
+
+    // Keep the message channel open for the async result.
+    return true;
+  }
+);
+
+// HTML copying function
+function copyCurrentPageHTML(captureDoctype, returnHtml = false) {
   // Capture the html, including changes made after page load.
-  const captureDoctype = false; // set to true if you want to include the doctype in the copied HTML
-  let html;
-  if(captureDoctype) {
-    const doctype = document.doctype
-      ? new XMLSerializer().serializeToString(document.doctype) + '\n'
-      : '';
-    html = doctype + document.documentElement.outerHTML;
-  } else {
-    html = document.documentElement.outerHTML;
+  let html = document.documentElement.outerHTML;
+
+  if (captureDoctype && document.doctype) {
+    const doctype = new XMLSerializer().serializeToString(document.doctype);
+    html = doctype + '\n' + html;
+  }
+
+  // Return HTML if requested by the popup.
+  if (returnHtml) {
+    return html;
   }
 
   // The clipboardWrite extension permission permits this fallback on pages
