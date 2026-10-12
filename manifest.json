@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Copy Page HTML",
+  "version": "1.0.0",
+  "description": "Copy the current page's complete live HTML to the clipboard with a shortcut.",
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "background": { "service_worker": "background.js" },
+  "action": { "default_title": "Copy page HTML" },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Q",
+        "mac": "Command+Shift+Q"
+      }
+    }
+  }
+}
