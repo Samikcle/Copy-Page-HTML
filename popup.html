@@ -15,15 +15,30 @@
   </label>
 
   <p class="hint">
-    Applies to both the button and keyboard shortcut.
+    Applies to copying and saving HTML.
   </p>
 
   <button type="button" id="copyButton">
     Copy HTML
   </button>
 
+  <!-- New: Save and Overwrite buttons -->
+  <div class="file-actions">
+    <button type="button" id="saveButton">
+      Save HTML As
+    </button>
+
+    <button type="button" id="overwriteButton">
+      Overwrite HTML File
+    </button>
+  </div>
+
+  <!-- New: Show selected filename -->
+  <p id="selectedFile">Selected file: None</p>
+
   <p id="status" role="status" aria-live="polite"></p>
 
+  <script src="file-store.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 body {
   box-sizing: border-box;
-  width: 275px;
+  width: 300px;
   margin: 0;
   padding: 18px;
   font-family: system-ui, -apple-system, sans-serif;
@@ -50,8 +50,28 @@ button:hover {
 }
 
 button:disabled {
-  opacity: .6;
-  cursor: wait;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* New: Save and Overwrite buttons */
+.file-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.file-actions button {
+  flex: 1;
+  font-size: 12px;
+}
+
+/* New: Selected filename */
+#selectedFile {
+  margin: 12px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 #status {

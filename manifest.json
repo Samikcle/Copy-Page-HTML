@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Copy Page HTML",
-  "version": "2.0.0",
-  "description": "Copy the current page's complete live HTML to the clipboard with a shortcut.",
+  "version": "2.1.0",
+  "description": "Copy or save the current webpage's HTML.",
   "permissions": ["activeTab", "scripting", "clipboardWrite", "storage"],
   "background": { "service_worker": "background.js" },
   "action": {
@@ -16,6 +16,13 @@
         "mac": "Command+Shift+Q"
       },
       "description": "Copy current page HTML"
+    },
+    "overwrite-html": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+D",
+        "mac": "Command+Shift+D"
+      },
+      "description": "Overwrite the selected HTML file"
     }
   }
 }
